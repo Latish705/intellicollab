@@ -1,0 +1,36 @@
+name: intellicolab
+
+services:
+  redis:
+    image: redis/redis-stack:6.2.6-v19
+    container_name: redis
+    environment:
+      REDIS_ARGS: "--requirepass dontknow"
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis_data:/data
+
+  loki:
+    image: grafana/loki
+    container_name: loki
+    ports:
+      - "3100:3100"
+
+  prom-server:
+    image: prom/prometheus
+    container_name: prom-server
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    ports:
+      - "3000:3000"
+
+volumes:
+  redis_data:
