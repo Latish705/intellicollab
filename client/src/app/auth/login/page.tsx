@@ -37,30 +37,30 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error("Login error:", error);
       let errorMessage = "Failed to sign in. Please try again.";
-      
+
       // Handle Firebase auth errors
       if (error.code) {
         switch (error.code) {
-          case 'auth/user-not-found':
+          case "auth/user-not-found":
             errorMessage = "No account found with this email address.";
             break;
-          case 'auth/wrong-password':
+          case "auth/wrong-password":
             errorMessage = "Incorrect password. Please try again.";
             break;
-          case 'auth/invalid-email':
+          case "auth/invalid-email":
             errorMessage = "Please enter a valid email address.";
             break;
-          case 'auth/too-many-requests':
+          case "auth/too-many-requests":
             errorMessage = "Too many failed attempts. Please try again later.";
             break;
-          case 'auth/user-disabled':
+          case "auth/user-disabled":
             errorMessage = "This account has been disabled.";
             break;
           default:
             errorMessage = error.message || "An error occurred during sign in.";
         }
       }
-      
+
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -92,9 +92,7 @@ export default function LoginPage() {
               IntelliCollab
             </h1>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Welcome Back
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
           <p className="text-gray-300">Sign in to your account to continue</p>
         </div>
 
@@ -107,7 +105,9 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white font-medium">Email</Label>
+            <Label htmlFor="email" className="text-white font-medium">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -120,7 +120,9 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-white font-medium">Password</Label>
+            <Label htmlFor="password" className="text-white font-medium">
+              Password
+            </Label>
             <div className="relative">
               <Input
                 id="password"
@@ -145,9 +147,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" 
+          <Button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? (
@@ -174,8 +176,8 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="text-gray-400 hover:text-white text-sm transition-colors inline-flex items-center"
           >
             ← Back to home
