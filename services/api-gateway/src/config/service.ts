@@ -3,6 +3,7 @@ import { createProxyMiddleware, Options } from "http-proxy-middleware";
 import { config } from ".";
 import logger from "./logger";
 import { ProxyErrorResponse, ServiceConfig } from "../types";
+import { firebaseAuthMiddleware } from "../middlewares/auth.middleware";
 
 class ServiceProxy {
   private static readonly serviceConfigs: ServiceConfig[] = [
@@ -91,7 +92,11 @@ class ServiceProxy {
   public static setupProxy(app: Application): void {
     ServiceProxy.serviceConfigs.forEach((service) => {
       const proxyOptions = ServiceProxy.createProxyOptions(service);
-      app.use(service.path, createProxyMiddleware(proxyOptions));
+      app.use(
+        service.path,
+        firebaseAuthMiddleware,
+        createProxyMiddleware(proxyOptions)
+      );
       logger.info(
         `Configured proxy for ${service.name} at ${service.path} -> ${service.url}`
       );

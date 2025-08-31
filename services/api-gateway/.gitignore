@@ -33,3 +33,7 @@ logs/
 *.swp
 *.bak
 *.tmp
+
+
+# custom
+service-key.json
