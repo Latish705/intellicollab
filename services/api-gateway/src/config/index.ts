@@ -7,9 +7,10 @@ interface Config {
   GATEWAY_JWT_EXPIRES_IN: string;
   LOG_LEVEL: string;
   REDIS_URL: string;
-  AUTH_SERVICE_URL: string;
-  ACCOUNTS_SERVICE_URL: string;
-  TRANSACTION_SERVICE_URL: string;
+  USER_SERVICE: string;
+  CHAT_SERVICE: string;
+  AI_SERVICE: string;
+  PERSISTENCE_SERVICE: string;
   NODE_ENV: string;
 }
 
@@ -24,11 +25,10 @@ export const config: Config = {
   GATEWAY_JWT_EXPIRES_IN: process.env.GATEWAY_JWT_EXPIRES_IN || "1m",
   LOG_LEVEL: process.env.LOG_LEVEL || "info",
   REDIS_URL: process.env.REDIS_URL || "redis://localhost:6379",
-  // change it ur service name and url accrodingly
-  AUTH_SERVICE_URL: process.env.AUTH_SERVICE_URL || "http://localhost:4001",
-  ACCOUNTS_SERVICE_URL:
-    process.env.ACCOUNTS_SERVICE_URL || "http://localhost:3002",
-  TRANSACTION_SERVICE_URL:
-    process.env.TRANSACTION_SERVICE_URL || "http://localhost:3003",
+  USER_SERVICE: process.env.USER_SERVICE_URL || "http://localhost:4001",
+  CHAT_SERVICE: process.env.CHAT_SERVICE_URL || "http://localhost:4003",
+  AI_SERVICE: process.env.AI_SERVICE_URL || "http://localhost:4004",
+  PERSISTENCE_SERVICE:
+    process.env.PERSISTENCE_SERVICE_URL || "http://localhost:4005",
   NODE_ENV: process.env.NODE_ENV || "development",
 };

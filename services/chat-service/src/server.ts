@@ -4,7 +4,7 @@ import connectDB from "./config/db";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4002;
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
