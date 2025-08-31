@@ -1,8 +1,8 @@
-# Microservices Architecture in intellicollab
+# Microservices Architecture in IntelliCollab
 
 ## Overview
 
-intellicollab is built on a modern microservices architecture, which allows for independent development, deployment, and scaling of individual components. This architecture provides several benefits, including improved fault isolation, technology diversity, and better team autonomy.
+IntelliCollab is built on a modern microservices architecture, which allows for independent development, deployment, and scaling of individual components. This architecture provides several benefits, including improved fault isolation, technology diversity, and better team autonomy.
 
 ## Key Components
 
@@ -67,7 +67,7 @@ Will manage user profiles and relationships:
 
 ## Service Communication
 
-Services in intellicollab communicate through two primary methods:
+Services in IntelliCollab communicate through two primary methods:
 
 ### 1. Synchronous Communication (REST APIs)
 
@@ -83,7 +83,7 @@ async function getUserDetails(userId: string) {
 
 ### 2. Asynchronous Communication (Message Queue)
 
-Used for events that don't require immediate processing. intellicollab uses Redis as a message broker for this purpose.
+Used for events that don't require immediate processing. IntelliCollab uses Redis as a message broker for this purpose.
 
 ```typescript
 // Example of publishing a message to Redis
@@ -131,9 +131,9 @@ The architecture includes a comprehensive observability stack:
 
 ## Practical Exercise
 
-1. Draw a diagram of the intellicollab architecture, including all services and their communication patterns.
-2. Identify potential bottlenecks in the architecture and suggest improvements.
-3. Design a new microservice for intellicollab and describe how it would integrate with the existing architecture.
+1. Draw a diagram of the IntelliCollab architecture, including all services and their communication patterns.
+2. Create a new service from scratch and integrate it with the existing platform.
+3. Design a new microservice for IntelliCollab and describe how it would integrate with the existing architecture.
 
 ## Further Reading
 

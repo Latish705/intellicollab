@@ -1,8 +1,8 @@
-# Auth Service in intellicollab
+# Auth Service in IntelliCollab
 
 ## Overview
 
-The Auth Service is responsible for user authentication and authorization in the intellicollab platform. It manages user credentials, issues JWT tokens, and provides endpoints for registration, login, and token validation.
+The Auth Service is responsible for user authentication and authorization in the IntelliCollab platform. It manages user credentials, issues JWT tokens, and provides endpoints for registration, login, and token validation.
 
 ## Key Responsibilities
 

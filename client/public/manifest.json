@@ -1,6 +1,6 @@
 {
-  "name": "intellicollab",
-  "short_name": "intellicollab",
+  "name": "IntelliCollab",
+  "short_name": "IntelliCollab",
   "description": "AI-powered team collaboration platform",
   "start_url": "/",
   "display": "standalone",

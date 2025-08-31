@@ -1,6 +1,6 @@
-# intellicollab Learning Guide
+# IntelliCollab Learning Guide
 
-Welcome to the intellicollab learning guide! This directory contains comprehensive documentation about the architecture, design patterns, and implementation details of the intellicollab platform.
+Welcome to the IntelliCollab learning guide! This directory contains comprehensive documentation about the architecture, design patterns, and implementation details of the IntelliCollab platform.
 
 ## Table of Contents
 
@@ -48,7 +48,7 @@ Welcome to the intellicollab learning guide! This directory contains comprehensi
 
 ## How to Use This Guide
 
-Each section contains detailed explanations of specific components of the intellicollab platform. Start with the Architecture Overview to understand the high-level design, then dive into specific components based on your interests or learning goals.
+Each section contains detailed explanations of specific components of the IntelliCollab platform. Start with the Architecture Overview to understand the high-level design, then dive into specific components based on your interests or learning goals.
 
 Code examples are provided throughout to illustrate key concepts, and each section includes practical exercises to reinforce learning.
 

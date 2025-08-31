@@ -101,7 +101,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Brain className="h-8 w-8 text-indigo-600 mr-2" />
-              <h1 className="text-xl font-bold text-gray-900">intellicollab</h1>
+              <h1 className="text-xl font-bold text-gray-900">IntelliCollab</h1>
             </div>
             <Button
               variant="ghost"
@@ -361,7 +361,7 @@ export default function DashboardPage() {
             <div className="text-center">
               <MessageSquare className="h-20 w-20 text-gray-300 mx-auto mb-6" />
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                Welcome to intellicollab
+                Welcome to IntelliCollab
               </h2>
               <p className="text-gray-500 mb-6 max-w-md">
                 Select a room from the sidebar to start collaborating, or create

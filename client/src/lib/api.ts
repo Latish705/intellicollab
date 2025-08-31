@@ -11,7 +11,11 @@ export const api = axios.create({
 
 // Add auth token to requests if available
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  // Prefer Firebase token over legacy token
+  const firebaseToken = localStorage.getItem('firebase_token');
+  const legacyToken = localStorage.getItem('token');
+  
+  const token = firebaseToken || legacyToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -38,6 +42,8 @@ export const authAPI = {
     api.post('/api/v1/auth/login', credentials),
   validate: (token: string) =>
     api.post('/api/v1/auth/validate', { token }),
+  createFromFirebase: (userData: { name: string; email: string; firebase_uid: string }) =>
+    api.post('/api/v1/user/create-from-firebase', userData),
 };
 
 export const chatAPI = {

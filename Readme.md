@@ -1,4 +1,4 @@
-# Intellicollab - AI Powered Chat Platform for Teams
+# IntelliCollab - AI Powered Chat Platform for Teams
 
 ## Architecture
 
@@ -26,7 +26,7 @@
 
 ## ✨ Overview
 
-**intellicollab** is a scalable and resilient chat platform built on a **cloud-native, microservices architecture**. It provides a secure foundation for team communication, complete with a robust **observability stack** and a **centralized API Gateway** to manage client interactions.  
+**IntelliCollab** is a scalable and resilient chat platform built on a **cloud-native, microservices architecture**. It provides a secure foundation for team communication, complete with a robust **observability stack** and a **centralized API Gateway** to manage client interactions.  
 This project is designed as a **powerful starting point** for building a feature-rich, **AI-enhanced collaboration tool**.
 
 ---

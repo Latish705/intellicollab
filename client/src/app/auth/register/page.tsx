@@ -8,6 +8,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Brain, Eye, EyeOff, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
+import { signInWithGoogle } from "@/config/firebase";
+
+// A simple SVG component for the Google Icon
+const GoogleIcon = () => (
+  <svg
+    className="mr-2 h-4 w-4"
+    aria-hidden="true"
+    focusable="false"
+    data-prefix="fab"
+    data-icon="google"
+    role="img"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 488 512"
+  >
+    <path
+      fill="currentColor"
+      d="M488 261.8C488 403.3 381.5 512 244 512 111.8 512 0 400.2 0 261.8 0 123.3 111.8 11.8 244 11.8c70.3 0 129.8 27.8 172.4 72.4l-66.2 64.2c-28-26.5-68.5-43.1-118.2-43.1-90.6 0-164.2 73.6-164.2 164.2 0 90.6 73.6 164.2 164.2 164.2 103.5 0 137.2-73.6 140.8-110.8H244V261.8h244z"
+    ></path>
+  </svg>
+);
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -21,6 +41,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Assuming your auth context will provide a signInWithGoogle method
   const { register } = useAuth();
   const router = useRouter();
 
@@ -71,6 +92,23 @@ export default function RegisterPage() {
     }
   };
 
+  // Handler for Google Sign-Up
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      // This function should be implemented in your auth-context.js
+      const token = await signInWithGoogle();
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      setError(
+        (error as any)?.response?.data?.message || "Google Sign-Up failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -84,7 +122,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Brain className="h-10 w-10 text-indigo-600 mr-2" />
-            <h1 className="text-2xl font-bold text-gray-900">intellicollab</h1>
+            <h1 className="text-2xl font-bold text-gray-900">IntelliCollab</h1>
           </div>
           <h2 className="text-xl font-semibold text-gray-700 mb-2">
             Create your account
@@ -226,6 +264,29 @@ export default function RegisterPage() {
             {loading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
+
+        {/* --- Start of Added Section --- */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-gray-500">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={handleGoogleSignUp}
+          disabled={loading}
+        >
+          <GoogleIcon />
+          Sign up with Google
+        </Button>
+        {/* --- End of Added Section --- */}
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">

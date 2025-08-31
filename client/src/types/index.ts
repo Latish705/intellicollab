@@ -1,9 +1,12 @@
+import { User as FirebaseUser } from 'firebase/auth';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   is_premium: boolean;
   created_at: string;
+  firebase_uid?: string;
 }
 
 export interface Room {
@@ -42,8 +45,9 @@ export interface CreateRoomDto {
 
 export interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (userData: RegisterUserDto) => Promise<void>;
+  firebaseUser?: FirebaseUser | null;
+  login: (email: string, password: string) => Promise<any>;
+  register: (userData: RegisterUserDto) => Promise<any>;
   logout: () => void;
   loading: boolean;
 }
