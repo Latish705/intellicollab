@@ -3,7 +3,7 @@ import express from "express";
 import helmet, { crossOriginEmbedderPolicy } from "helmet";
 import cors from "cors";
 import promclient, { register } from "prom-client";
-import userRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 
 const app = express();
 
@@ -21,6 +21,6 @@ app.get("/metrics", async (req: Request, res: Response) => {
   res.send(metrics);
 });
 
-app.use(userRoutes);
+app.use(chatRoutes);
 
 export default app;
