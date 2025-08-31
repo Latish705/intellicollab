@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/contexts/auth-context';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Brain, 
-  MessageSquare, 
-  Plus, 
-  Search, 
-  Settings, 
-  Users, 
+import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Brain,
+  MessageSquare,
+  Plus,
+  Search,
+  Settings,
+  Users,
   LogOut,
   Send,
-  Hash
-} from 'lucide-react';
-import { chatAPI } from '@/lib/api';
-import { Room } from '@/types';
+  Hash,
+} from "lucide-react";
+import { chatAPI } from "@/lib/api";
+import { Room } from "@/types";
 
 export default function DashboardPage() {
   const { user, logout, loading } = useAuth();
@@ -28,15 +28,15 @@ export default function DashboardPage() {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [newRoomData, setNewRoomData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     is_private: false,
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   }, [user, loading, router]);
 
@@ -51,7 +51,7 @@ export default function DashboardPage() {
       const response = await chatAPI.getRooms();
       setRooms(response.data);
     } catch (error) {
-      console.error('Failed to load rooms:', error);
+      console.error("Failed to load rooms:", error);
     }
   };
 
@@ -63,16 +63,16 @@ export default function DashboardPage() {
       await chatAPI.createRoom({
         name: newRoomData.name,
         description: newRoomData.description,
-        organisation_id: 'default-org', // Replace with actual org ID
+        organisation_id: "default-org", // Replace with actual org ID
         created_by_user_id: user.id,
         is_private: newRoomData.is_private,
       });
-      
-      setNewRoomData({ name: '', description: '', is_private: false });
+
+      setNewRoomData({ name: "", description: "", is_private: false });
       setShowCreateRoom(false);
       await loadRooms();
     } catch (error) {
-      console.error('Failed to create room:', error);
+      console.error("Failed to create room:", error);
     }
   };
 
@@ -88,7 +88,7 @@ export default function DashboardPage() {
     return null;
   }
 
-  const filteredRooms = rooms.filter(room =>
+  const filteredRooms = rooms.filter((room) =>
     room.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -101,7 +101,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Brain className="h-8 w-8 text-indigo-600 mr-2" />
-              <h1 className="text-xl font-bold text-gray-900">IntelliColab</h1>
+              <h1 className="text-xl font-bold text-gray-900">intellicollab</h1>
             </div>
             <Button
               variant="ghost"
@@ -112,7 +112,7 @@ export default function DashboardPage() {
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
-          
+
           {/* User info */}
           <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
             <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
@@ -124,9 +124,7 @@ export default function DashboardPage() {
               <p className="text-sm font-medium text-gray-900 truncate">
                 {user.name}
               </p>
-              <p className="text-xs text-gray-500 truncate">
-                {user.email}
-              </p>
+              <p className="text-xs text-gray-500 truncate">{user.email}</p>
             </div>
             {user.is_premium && (
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -162,22 +160,33 @@ export default function DashboardPage() {
           <div className="p-4 border-b border-gray-200 bg-gray-50">
             <form onSubmit={handleCreateRoom} className="space-y-3">
               <div>
-                <Label htmlFor="roomName" className="text-sm">Room Name</Label>
+                <Label htmlFor="roomName" className="text-sm">
+                  Room Name
+                </Label>
                 <Input
                   id="roomName"
                   value={newRoomData.name}
-                  onChange={(e) => setNewRoomData({...newRoomData, name: e.target.value})}
+                  onChange={(e) =>
+                    setNewRoomData({ ...newRoomData, name: e.target.value })
+                  }
                   placeholder="Enter room name"
                   required
                   className="mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="roomDescription" className="text-sm">Description (optional)</Label>
+                <Label htmlFor="roomDescription" className="text-sm">
+                  Description (optional)
+                </Label>
                 <Textarea
                   id="roomDescription"
                   value={newRoomData.description}
-                  onChange={(e) => setNewRoomData({...newRoomData, description: e.target.value})}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      description: e.target.value,
+                    })
+                  }
                   placeholder="Enter room description"
                   className="mt-1"
                   rows={2}
@@ -188,18 +197,25 @@ export default function DashboardPage() {
                   type="checkbox"
                   id="isPrivate"
                   checked={newRoomData.is_private}
-                  onChange={(e) => setNewRoomData({...newRoomData, is_private: e.target.checked})}
+                  onChange={(e) =>
+                    setNewRoomData({
+                      ...newRoomData,
+                      is_private: e.target.checked,
+                    })
+                  }
                   className="rounded border-gray-300"
                 />
-                <Label htmlFor="isPrivate" className="text-sm">Private room</Label>
+                <Label htmlFor="isPrivate" className="text-sm">
+                  Private room
+                </Label>
               </div>
               <div className="flex space-x-2">
                 <Button type="submit" size="sm" className="flex-1">
                   Create
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   size="sm"
                   onClick={() => setShowCreateRoom(false)}
                 >
@@ -221,7 +237,9 @@ export default function DashboardPage() {
                 <div className="text-center py-8">
                   <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm">
-                    {rooms.length === 0 ? 'No rooms yet' : 'No rooms match your search'}
+                    {rooms.length === 0
+                      ? "No rooms yet"
+                      : "No rooms match your search"}
                   </p>
                   {rooms.length === 0 && (
                     <p className="text-gray-400 text-xs mt-1">
@@ -235,13 +253,17 @@ export default function DashboardPage() {
                     key={room._id}
                     onClick={() => setSelectedRoom(room)}
                     className={`w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors ${
-                      selectedRoom?._id === room._id ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-gray-200'
+                      selectedRoom?._id === room._id
+                        ? "bg-indigo-50 border-indigo-200"
+                        : "bg-white border-gray-200"
                     } border`}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`w-8 h-8 rounded flex items-center justify-center ${
-                        room.is_private ? 'bg-gray-100' : 'bg-indigo-100'
-                      }`}>
+                      <div
+                        className={`w-8 h-8 rounded flex items-center justify-center ${
+                          room.is_private ? "bg-gray-100" : "bg-indigo-100"
+                        }`}
+                      >
                         {room.is_private ? (
                           <Users className="h-4 w-4 text-gray-600" />
                         ) : (
@@ -275,9 +297,11 @@ export default function DashboardPage() {
             <div className="bg-white border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded flex items-center justify-center ${
-                    selectedRoom.is_private ? 'bg-gray-100' : 'bg-indigo-100'
-                  }`}>
+                  <div
+                    className={`w-8 h-8 rounded flex items-center justify-center ${
+                      selectedRoom.is_private ? "bg-gray-100" : "bg-indigo-100"
+                    }`}
+                  >
                     {selectedRoom.is_private ? (
                       <Users className="h-4 w-4 text-gray-600" />
                     ) : (
@@ -313,7 +337,8 @@ export default function DashboardPage() {
                   This is the beginning of your conversation in this room.
                 </p>
                 <p className="text-sm text-gray-400 mt-2">
-                  Real-time messaging will be implemented with Socket.IO integration.
+                  Real-time messaging will be implemented with Socket.IO
+                  integration.
                 </p>
               </div>
             </div>
@@ -336,10 +361,11 @@ export default function DashboardPage() {
             <div className="text-center">
               <MessageSquare className="h-20 w-20 text-gray-300 mx-auto mb-6" />
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                Welcome to IntelliColab
+                Welcome to intellicollab
               </h2>
               <p className="text-gray-500 mb-6 max-w-md">
-                Select a room from the sidebar to start collaborating, or create a new room to begin your conversation.
+                Select a room from the sidebar to start collaborating, or create
+                a new room to begin your conversation.
               </p>
               <Button onClick={() => setShowCreateRoom(true)}>
                 <Plus className="h-4 w-4 mr-2" />

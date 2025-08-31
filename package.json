@@ -1,4 +1,32 @@
 {
+  "name": "intellicollab",
+  "version": "1.0.0",
+  "description": "IntelliCollab - AI-Powered Team Collaboration Platform",
+  "private": true,
+  "workspaces": [
+    "client",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "docker-compose up -d",
+    "build": "docker-compose build",
+    "start": "docker-compose up",
+    "stop": "docker-compose down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Latish705/intellicollab.git"
+  },
+  "keywords": [
+    "collaboration",
+    "chat",
+    "AI",
+    "microservices",
+    "team-communication",
+    "real-time-messaging"
+  ],
+  "author": "IntelliCollab Team",
+  "license": "MIT",
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0"

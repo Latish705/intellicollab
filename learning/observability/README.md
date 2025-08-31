@@ -1,14 +1,14 @@
-# Observability in IntelliColab
+# Observability in intellicollab
 
 ## Overview
 
-Observability is a critical aspect of microservices architecture, providing insights into the behavior, performance, and health of distributed systems. IntelliColab implements a comprehensive observability stack consisting of metrics, logging, and tracing to ensure all aspects of the system are monitored and troubleshooting is efficient.
+Observability is a critical aspect of microservices architecture, providing insights into the behavior, performance, and health of distributed systems. intellicollab implements a comprehensive observability stack consisting of metrics, logging, and tracing to ensure all aspects of the system are monitored and troubleshooting is efficient.
 
 ## Components of the Observability Stack
 
 ### 1. Prometheus - Metrics Collection
 
-Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability. In IntelliColab, it:
+Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability. In intellicollab, it:
 
 - Collects metrics from all services
 - Stores time-series data
@@ -227,7 +227,7 @@ A typical Grafana dashboard for the API Gateway might include:
 
 ### 3. Loki - Centralized Logging
 
-Loki is a horizontally-scalable, highly-available log aggregation system designed to be cost-effective and easy to operate. In IntelliColab, it:
+Loki is a horizontally-scalable, highly-available log aggregation system designed to be cost-effective and easy to operate. In intellicollab, it:
 
 - Collects logs from all services
 - Indexes logs by labels (like service name, pod name)
@@ -236,7 +236,7 @@ Loki is a horizontally-scalable, highly-available log aggregation system designe
 
 #### Structured Logging Implementation
 
-Services in IntelliColab use structured logging to make log analysis easier:
+Services in intellicollab use structured logging to make log analysis easier:
 
 ```typescript
 // From api-gateway/src/config/logger.ts
@@ -302,7 +302,7 @@ scrape_configs:
 
 ## Distributed Tracing
 
-Distributed tracing tracks the flow of requests across multiple services, providing insights into the end-to-end request flow. While not currently implemented in IntelliColab, it's a recommended addition using tools like Jaeger or Zipkin.
+Distributed tracing tracks the flow of requests across multiple services, providing insights into the end-to-end request flow. While not currently implemented in intellicollab, it's a recommended addition using tools like Jaeger or Zipkin.
 
 A typical implementation would use OpenTelemetry:
 

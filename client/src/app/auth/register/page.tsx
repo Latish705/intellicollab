@@ -1,52 +1,56 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuth } from '@/contexts/auth-context';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Brain, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useState } from "react";
+import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Brain, Eye, EyeOff, CheckCircle, XCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const { register } = useAuth();
   const router = useRouter();
 
   const passwordRequirements = [
-    { regex: /.{8,}/, text: 'At least 8 characters' },
-    { regex: /[A-Z]/, text: 'One uppercase letter' },
-    { regex: /[a-z]/, text: 'One lowercase letter' },
-    { regex: /\d/, text: 'One number' },
+    { regex: /.{8,}/, text: "At least 8 characters" },
+    { regex: /[A-Z]/, text: "One uppercase letter" },
+    { regex: /[a-z]/, text: "One lowercase letter" },
+    { regex: /\d/, text: "One number" },
   ];
 
-  const isPasswordValid = passwordRequirements.every(req => req.regex.test(formData.password));
-  const doPasswordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== '';
+  const isPasswordValid = passwordRequirements.every((req) =>
+    req.regex.test(formData.password)
+  );
+  const doPasswordsMatch =
+    formData.password === formData.confirmPassword &&
+    formData.confirmPassword !== "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     if (!isPasswordValid) {
-      setError('Password does not meet requirements');
+      setError("Password does not meet requirements");
       setLoading(false);
       return;
     }
 
     if (!doPasswordsMatch) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
@@ -57,9 +61,11 @@ export default function RegisterPage() {
         email: formData.email,
         password: formData.password,
       });
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error: unknown) {
-      setError((error as any)?.response?.data?.message || 'Registration failed');
+      setError(
+        (error as any)?.response?.data?.message || "Registration failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -78,10 +84,14 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Brain className="h-10 w-10 text-indigo-600 mr-2" />
-            <h1 className="text-2xl font-bold text-gray-900">IntelliColab</h1>
+            <h1 className="text-2xl font-bold text-gray-900">intellicollab</h1>
           </div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Create your account</h2>
-          <p className="text-gray-600">Join thousands of teams collaborating smarter</p>
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            Create your account
+          </h2>
+          <p className="text-gray-600">
+            Join thousands of teams collaborating smarter
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -123,7 +133,7 @@ export default function RegisterPage() {
               <Input
                 id="password"
                 name="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Create a password"
@@ -134,10 +144,14 @@ export default function RegisterPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
-            
+
             {formData.password && (
               <div className="mt-2 space-y-1">
                 {passwordRequirements.map((req, index) => (
@@ -147,7 +161,13 @@ export default function RegisterPage() {
                     ) : (
                       <XCircle className="h-4 w-4 text-gray-300 mr-2" />
                     )}
-                    <span className={req.regex.test(formData.password) ? 'text-green-600' : 'text-gray-500'}>
+                    <span
+                      className={
+                        req.regex.test(formData.password)
+                          ? "text-green-600"
+                          : "text-gray-500"
+                      }
+                    >
                       {req.text}
                     </span>
                   </div>
@@ -162,7 +182,7 @@ export default function RegisterPage() {
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirm your password"
@@ -173,10 +193,14 @@ export default function RegisterPage() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
-            
+
             {formData.confirmPassword && (
               <div className="flex items-center text-sm mt-1">
                 {doPasswordsMatch ? (
@@ -194,19 +218,22 @@ export default function RegisterPage() {
             )}
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full" 
+          <Button
+            type="submit"
+            className="w-full"
             disabled={loading || !isPasswordValid || !doPasswordsMatch}
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Already have an account?{' '}
-            <Link href="/auth/login" className="text-indigo-600 hover:text-indigo-500 font-medium">
+            Already have an account?{" "}
+            <Link
+              href="/auth/login"
+              className="text-indigo-600 hover:text-indigo-500 font-medium"
+            >
               Sign in
             </Link>
           </p>

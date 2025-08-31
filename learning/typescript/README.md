@@ -1,14 +1,14 @@
-# TypeScript Best Practices in IntelliColab
+# TypeScript Best Practices in intellicollab
 
 ## Overview
 
-TypeScript enhances JavaScript with static typing, making the IntelliColab codebase more maintainable, readable, and less prone to runtime errors. This guide covers TypeScript best practices used throughout the project.
+TypeScript enhances JavaScript with static typing, making the intellicollab codebase more maintainable, readable, and less prone to runtime errors. This guide covers TypeScript best practices used throughout the project.
 
 ## Type Definitions
 
 ### 1. Interfaces vs. Types
 
-IntelliColab uses both interfaces and types, following these guidelines:
+intellicollab uses both interfaces and types, following these guidelines:
 
 - Use **interfaces** for object shapes that may be extended or implemented
 - Use **types** for unions, intersections, or when you need to use primitives
@@ -112,7 +112,7 @@ type UserUpdate = Partial<Omit<User, "id" | "createdAt">>;
 
 ### 1. tsconfig.json
 
-IntelliColab uses a strict TypeScript configuration:
+intellicollab uses a strict TypeScript configuration:
 
 ```json
 // From api-gateway/tsconfig.json
@@ -155,7 +155,7 @@ Key options explained:
 
 ### 2. ESLint Configuration
 
-IntelliColab uses ESLint with TypeScript-specific rules:
+intellicollab uses ESLint with TypeScript-specific rules:
 
 ```json
 // From api-gateway/.eslintrc.json
@@ -190,7 +190,7 @@ IntelliColab uses ESLint with TypeScript-specific rules:
 
 ### 1. Custom Error Types
 
-IntelliColab defines custom error types for different scenarios:
+intellicollab defines custom error types for different scenarios:
 
 ```typescript
 // From api-gateway/src/utils/errors.ts

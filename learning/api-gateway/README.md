@@ -1,8 +1,8 @@
-# API Gateway in IntelliColab
+# API Gateway in intellicollab
 
 ## Overview
 
-The API Gateway serves as the single entry point for all client requests in the IntelliColab platform. It abstracts the underlying microservice architecture from clients and provides cross-cutting concerns like authentication, rate limiting, and request routing.
+The API Gateway serves as the single entry point for all client requests in the intellicollab platform. It abstracts the underlying microservice architecture from clients and provides cross-cutting concerns like authentication, rate limiting, and request routing.
 
 ## Key Responsibilities
 

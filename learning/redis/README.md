@@ -1,8 +1,8 @@
-# Redis Integration in IntelliColab
+# Redis Integration in intellicollab
 
 ## Overview
 
-Redis is an in-memory data structure store used in IntelliColab for caching, message brokering, and implementing distributed patterns like rate limiting. Its high performance and versatility make it an ideal solution for these use cases in a microservices architecture.
+Redis is an in-memory data structure store used in intellicollab for caching, message brokering, and implementing distributed patterns like rate limiting. Its high performance and versatility make it an ideal solution for these use cases in a microservices architecture.
 
 ## Key Use Cases
 
@@ -382,7 +382,7 @@ Redis provides multiple persistence options:
 2. **AOF (Append-Only File)**: Logs every write operation, good for durability
 3. **RDB + AOF**: Combines both approaches for optimal durability and performance
 
-In IntelliColab, the production environment uses RDB + AOF:
+In intellicollab, the production environment uses RDB + AOF:
 
 ```
 # redis.conf
@@ -396,7 +396,7 @@ appendfsync everysec
 
 ## Redis in Docker Compose
 
-Redis is configured in the IntelliColab Docker Compose file:
+Redis is configured in the intellicollab Docker Compose file:
 
 ```yaml
 # docker-compose.yml

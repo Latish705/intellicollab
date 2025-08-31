@@ -1,8 +1,8 @@
-# IntelliColab Frontend
+# intellicollab Frontend
 
-A modern, responsive Next.js frontend for the IntelliColab AI-powered team collaboration platform.
+A modern, responsive Next.js frontend for the intellicollab AI-powered team collaboration platform.
 
-![IntelliColab Homepage](https://github.com/user-attachments/assets/3803cf91-5f8b-4d33-853b-2051e7213da7)
+![intellicollab Homepage](https://github.com/user-attachments/assets/3803cf91-5f8b-4d33-853b-2051e7213da7)
 
 ## ✨ Features
 
@@ -45,20 +45,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## 📸 Screenshots
 
 ### Homepage
+
 ![Homepage](https://github.com/user-attachments/assets/3803cf91-5f8b-4d33-853b-2051e7213da7)
 
 ### Registration Page
+
 ![Registration](https://github.com/user-attachments/assets/c0771045-a36f-4ee7-ab27-040fe7b2ed54)
 
 ### Login Page
+
 ![Login](https://github.com/user-attachments/assets/bf120bfb-950b-4a4a-a3c5-f5d8912b7780)
 
 ### Dashboard
+
 ![Dashboard](https://github.com/user-attachments/assets/c2022c5c-5d23-44e8-a81c-72195c26df47)
 
 ## 🔗 API Integration
 
-The frontend integrates with the IntelliColab microservices through the API Gateway:
+The frontend integrates with the intellicollab microservices through the API Gateway:
 
 - **User Service**: `/api/v1/user/*` - User registration and management
 - **Auth Service**: `/api/v1/auth/*` - Authentication and token validation

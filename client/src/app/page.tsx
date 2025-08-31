@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   }, [user, loading, router]);
 
@@ -33,7 +33,9 @@ export default function HomePage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <Brain className="h-8 w-8 text-indigo-600 mr-2" />
-              <h1 className="text-2xl font-bold text-gray-900">IntelliColab</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                intellicollab
+              </h1>
             </div>
             <div className="space-x-4">
               <Link href="/auth/login">
@@ -51,12 +53,13 @@ export default function HomePage() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-5xl font-extrabold text-gray-900 mb-6">
-            AI-Powered Team 
+            AI-Powered Team
             <span className="text-indigo-600"> Collaboration</span>
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Transform your team communication with our scalable, microservices-based chat platform. 
-            Built for modern teams that value innovation, security, and real-time collaboration.
+            Transform your team communication with our scalable,
+            microservices-based chat platform. Built for modern teams that value
+            innovation, security, and real-time collaboration.
           </p>
           <div className="space-x-4">
             <Link href="/auth/register">
@@ -81,56 +84,75 @@ export default function HomePage() {
               Everything Your Team Needs
             </h3>
             <p className="text-lg text-gray-600">
-              Built on cutting-edge microservices architecture with enterprise-grade features
+              Built on cutting-edge microservices architecture with
+              enterprise-grade features
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <MessageSquare className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">Real-time Chat</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                Real-time Chat
+              </h4>
               <p className="text-gray-600">
-                Instant messaging with room management, file sharing, and persistent message history.
+                Instant messaging with room management, file sharing, and
+                persistent message history.
               </p>
             </div>
 
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <Shield className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">Enterprise Security</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                Enterprise Security
+              </h4>
               <p className="text-gray-600">
-                JWT-based authentication, rate limiting, and secure API gateway protecting all services.
+                JWT-based authentication, rate limiting, and secure API gateway
+                protecting all services.
               </p>
             </div>
 
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <Users className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">Team Management</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                Team Management
+              </h4>
               <p className="text-gray-600">
-                Organize teams, manage user roles, and create private or public collaboration spaces.
+                Organize teams, manage user roles, and create private or public
+                collaboration spaces.
               </p>
             </div>
 
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <Zap className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">High Performance</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                High Performance
+              </h4>
               <p className="text-gray-600">
-                Microservices architecture with Redis caching and Kafka messaging for scalability.
+                Microservices architecture with Redis caching and Kafka
+                messaging for scalability.
               </p>
             </div>
 
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <Brain className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">AI Integration</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                AI Integration
+              </h4>
               <p className="text-gray-600">
-                AI-powered features for smart suggestions, content analysis, and enhanced productivity.
+                AI-powered features for smart suggestions, content analysis, and
+                enhanced productivity.
               </p>
             </div>
 
             <div className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
               <Globe className="h-12 w-12 text-indigo-600 mb-4" />
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">Full Observability</h4>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                Full Observability
+              </h4>
               <p className="text-gray-600">
-                Comprehensive monitoring with Prometheus, Grafana dashboards, and centralized logging.
+                Comprehensive monitoring with Prometheus, Grafana dashboards,
+                and centralized logging.
               </p>
             </div>
           </div>
@@ -144,7 +166,8 @@ export default function HomePage() {
             Ready to Transform Your Team Communication?
           </h3>
           <p className="text-xl text-indigo-100 mb-8">
-            Join thousands of teams already collaborating smarter with IntelliColab
+            Join thousands of teams already collaborating smarter with
+            intellicollab
           </p>
           <Link href="/auth/register">
             <Button size="lg" variant="secondary" className="px-8 py-3">
@@ -160,10 +183,11 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Brain className="h-6 w-6 text-indigo-400 mr-2" />
-              <span className="text-white font-semibold">IntelliColab</span>
+              <span className="text-white font-semibold">intellicollab</span>
             </div>
             <p className="text-gray-400">
-              © 2024 IntelliColab. Built with modern microservices architecture.
+              © 2024 intellicollab. Built with modern microservices
+              architecture.
             </p>
           </div>
         </div>

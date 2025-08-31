@@ -1,8 +1,8 @@
-# Containerization in IntelliColab
+# Containerization in intellicollab
 
 ## Overview
 
-Containerization is a key aspect of IntelliColab's architecture, enabling consistent deployment across environments, efficient resource utilization, and simplified scaling. Docker and Docker Compose are used to containerize all services and manage their deployment.
+Containerization is a key aspect of intellicollab's architecture, enabling consistent deployment across environments, efficient resource utilization, and simplified scaling. Docker and Docker Compose are used to containerize all services and manage their deployment.
 
 ## Docker Basics
 
@@ -21,9 +21,9 @@ Docker provides a way to package applications and their dependencies into a stan
 3. **Dockerfile**: Script of instructions to build a Docker image
 4. **Registry**: Repository for storing and distributing Docker images
 
-## Docker in IntelliColab
+## Docker in intellicollab
 
-Each service in IntelliColab has its own Dockerfile, defining how the service should be containerized.
+Each service in intellicollab has its own Dockerfile, defining how the service should be containerized.
 
 ### API Gateway Dockerfile
 
@@ -100,7 +100,7 @@ CMD ["node", "dist/server.js"]
 
 ## Docker Compose
 
-Docker Compose is used to define and manage multi-container Docker applications. In IntelliColab, it orchestrates the entire local development environment.
+Docker Compose is used to define and manage multi-container Docker applications. In intellicollab, it orchestrates the entire local development environment.
 
 ### Docker Compose File
 
@@ -266,7 +266,7 @@ fetch("http://auth-service:3001/validate", {
 
 ## Data Persistence
 
-Docker containers are ephemeral, meaning any data not stored in a volume is lost when the container stops. IntelliColab uses named volumes to persist data:
+Docker containers are ephemeral, meaning any data not stored in a volume is lost when the container stops. intellicollab uses named volumes to persist data:
 
 ```yaml
 volumes:
@@ -289,7 +289,7 @@ volumes:
 1. Modify the API Gateway Dockerfile to use a multi-stage build
 2. Add a health check to each service in the Docker Compose file
 3. Create a production-ready Docker Compose configuration
-4. Implement a basic Kubernetes deployment for IntelliColab
+4. Implement a basic Kubernetes deployment for intellicollab
 5. Set up a CI/CD pipeline to build and publish Docker images
 
 ## Common Docker Commands
