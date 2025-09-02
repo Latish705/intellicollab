@@ -1,5 +1,10 @@
 export interface RegisterUserDto {
   name: string;
   email: string;
-  password: string;
+  firebaseId: string;
+  phone: number;
+}
+
+export interface LoginUserDto {
+  firebaseId: string;
 }

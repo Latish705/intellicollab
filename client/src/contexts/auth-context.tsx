@@ -10,7 +10,7 @@ import {
   User as FirebaseUser,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/config/firebase";
 import { User, AuthContextType, RegisterUserDto } from "@/types";
 import { authAPI } from "@/lib/api";
 
@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // this is firebase hook for noticing the auth state change
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setFirebaseUser(firebaseUser);

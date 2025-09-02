@@ -33,6 +33,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -64,6 +65,14 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
+    // Basic phone validation (at least 10 digits)
+    const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setError("Please enter a valid phone number (at least 10 digits)");
+      setLoading(false);
+      return;
+    }
+
     if (!isPasswordValid) {
       setError("Password does not meet requirements");
       setLoading(false);
@@ -80,6 +89,7 @@ export default function RegisterPage() {
       await register({
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password,
       });
       router.push("/dashboard");
@@ -117,193 +127,263 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Brain className="h-10 w-10 text-indigo-600 mr-2" />
-            <h1 className="text-2xl font-bold text-gray-900">IntelliCollab</h1>
-          </div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">
-            Create your account
-          </h2>
-          <p className="text-gray-600">
-            Join thousands of teams collaborating smarter
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center ">
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
-              {error}
+      <div className="relative w-full max-w-md my-8">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-6">
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center mb-3">
+              <div className="relative">
+                <Brain className="h-10 w-10 text-purple-400" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent ml-2">
+                IntelliCollab
+              </h1>
             </div>
-          )}
-
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Enter your full name"
-              required
-            />
+            <h2 className="text-xl font-bold text-white mb-1">
+              Create your account
+            </h2>
+            <p className="text-gray-300 text-sm">
+              Join thousands of teams collaborating smarter
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="Create a password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-
-            {formData.password && (
-              <div className="mt-2 space-y-1">
-                {passwordRequirements.map((req, index) => (
-                  <div key={index} className="flex items-center text-sm">
-                    {req.regex.test(formData.password) ? (
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    ) : (
-                      <XCircle className="h-4 w-4 text-gray-300 mr-2" />
-                    )}
-                    <span
-                      className={
-                        req.regex.test(formData.password)
-                          ? "text-green-600"
-                          : "text-gray-500"
-                      }
-                    >
-                      {req.text}
-                    </span>
-                  </div>
-                ))}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 px-3 py-2 rounded-2xl text-sm">
+                {error}
               </div>
             )}
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder="Confirm your password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
+            <div className="flex flex-row gap-2 ">
+              <div className="space-y-1 w-56">
+                <Label
+                  htmlFor="name"
+                  className="text-gray-200 font-medium text-sm"
+                >
+                  Full Name
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                  className="bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent h-10"
+                  required
+                />
+              </div>
+              <div className="space-y-1 w-full">
+                <Label
+                  htmlFor="phone"
+                  className="text-gray-200 font-medium text-sm"
+                >
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Enter your phone number"
+                  className="bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent h-10"
+                  required
+                />
+              </div>
             </div>
 
-            {formData.confirmPassword && (
-              <div className="flex items-center text-sm mt-1">
-                {doPasswordsMatch ? (
-                  <>
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-green-600">Passwords match</span>
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="h-4 w-4 text-red-500 mr-2" />
-                    <span className="text-red-600">Passwords do not match</span>
-                  </>
-                )}
+            <div className="space-y-1">
+              <Label
+                htmlFor="email"
+                className="text-gray-200 font-medium text-sm"
+              >
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Enter your email"
+                className="bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent h-10"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label
+                htmlFor="password"
+                className="text-gray-200 font-medium text-sm"
+              >
+                Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a password"
+                  className="bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-12 h-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
-            )}
+
+              {formData.password && (
+                <div className="mt-1 space-y-0.5">
+                  {passwordRequirements.map((req, index) => (
+                    <div key={index} className="flex items-center text-xs">
+                      {req.regex.test(formData.password) ? (
+                        <CheckCircle className="h-3 w-3 text-green-400 mr-1.5" />
+                      ) : (
+                        <XCircle className="h-3 w-3 text-gray-500 mr-1.5" />
+                      )}
+                      <span
+                        className={
+                          req.regex.test(formData.password)
+                            ? "text-green-400"
+                            : "text-gray-400"
+                        }
+                      >
+                        {req.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label
+                htmlFor="confirmPassword"
+                className="text-gray-200 font-medium text-sm"
+              >
+                Confirm Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm your password"
+                  className="bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder-gray-400 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-12 h-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {formData.confirmPassword && (
+                <div className="flex items-center text-xs mt-1">
+                  {doPasswordsMatch ? (
+                    <>
+                      <CheckCircle className="h-3 w-3 text-green-400 mr-1.5" />
+                      <span className="text-green-400">Passwords match</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="h-3 w-3 text-red-400 mr-1.5" />
+                      <span className="text-red-400">
+                        Passwords do not match
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              disabled={loading || !isPasswordValid || !doPasswordsMatch}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                  Creating account...
+                </div>
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/20" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white/5 backdrop-blur-sm px-3 py-1 rounded-full text-gray-400">
+                Or continue with
+              </span>
+            </div>
           </div>
 
           <Button
-            type="submit"
-            className="w-full"
-            disabled={loading || !isPasswordValid || !doPasswordsMatch}
+            variant="outline"
+            className="w-full bg-white/5 backdrop-blur-sm border-white/20 text-white hover:bg-white/10 rounded-2xl py-3"
+            onClick={handleGoogleSignUp}
+            disabled={loading}
           >
-            {loading ? "Creating account..." : "Create Account"}
+            <GoogleIcon />
+            Sign up with Google
           </Button>
-        </form>
+          {/* --- End of Added Section --- */}
 
-        {/* --- Start of Added Section --- */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+          <div className="mt-4 text-center">
+            <p className="text-gray-300 text-sm">
+              Already have an account?{" "}
+              <Link
+                href="/auth/login"
+                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+              >
+                Sign in
+              </Link>
+            </p>
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-gray-500">
-              Or continue with
-            </span>
-          </div>
-        </div>
 
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleGoogleSignUp}
-          disabled={loading}
-        >
-          <GoogleIcon />
-          Sign up with Google
-        </Button>
-        {/* --- End of Added Section --- */}
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-600">
-            Already have an account?{" "}
+          <div className="mt-4 text-center">
             <Link
-              href="/auth/login"
-              className="text-indigo-600 hover:text-indigo-500 font-medium"
+              href="/"
+              className="text-gray-400 hover:text-gray-300 text-sm transition-colors"
             >
-              Sign in
+              ← Back to home
             </Link>
-          </p>
-        </div>
-
-        <div className="mt-8 text-center">
-          <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm">
-            ← Back to home
-          </Link>
+          </div>
         </div>
       </div>
     </div>

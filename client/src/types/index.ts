@@ -4,6 +4,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   is_premium: boolean;
   created_at: string;
   firebase_uid?: string;
@@ -32,6 +33,7 @@ export interface Message {
 export interface RegisterUserDto {
   name: string;
   email: string;
+  phone: string;
   password: string;
 }
 

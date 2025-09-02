@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [newRoomData, setNewRoomData] = useState({
     name: "",
     description: "",
@@ -45,6 +46,15 @@ export default function DashboardPage() {
       loadRooms();
     }
   }, [user]);
+
+  const handleLogout = async () => {
+    setShowLogoutConfirm(false);
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   const loadRooms = async () => {
     try {
@@ -78,8 +88,11 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600"></div>
+          <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-purple-300 opacity-20"></div>
+        </div>
       </div>
     );
   }
@@ -93,41 +106,79 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex">
+      {/* Logout Confirmation Dialog */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">
+              Confirm Logout
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to sign out? You'll need to sign in again to
+              access your account.
+            </p>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowLogoutConfirm(false)}
+                variant="outline"
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleLogout}
+                className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+              >
+                Sign Out
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className="w-80 bg-black/20 backdrop-blur-xl border-r border-white/10 flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <Brain className="h-8 w-8 text-indigo-600 mr-2" />
-              <h1 className="text-xl font-bold text-gray-900">IntelliCollab</h1>
+              <div className="relative">
+                <Brain className="h-8 w-8 text-purple-400" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent ml-2">
+                IntelliCollab
+              </h1>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={logout}
-              title="Sign out"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowLogoutConfirm(true)}
+                className="text-gray-300 hover:text-white hover:bg-white/10 rounded-xl"
+                title="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* User info */}
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
+          <div className="flex items-center space-x-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold">
                 {user.name.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-white truncate">
                 {user.name}
               </p>
-              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+              <p className="text-xs text-gray-400 truncate">{user.email}</p>
             </div>
             {user.is_premium && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
                 Pro
               </span>
             )}
@@ -135,19 +186,19 @@ export default function DashboardPage() {
         </div>
 
         {/* Search and Create */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-white/10">
           <div className="relative mb-3">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search rooms..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-400 focus:border-purple-400 rounded-xl"
             />
           </div>
           <Button
             onClick={() => setShowCreateRoom(!showCreateRoom)}
-            className="w-full"
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
             size="sm"
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -157,10 +208,13 @@ export default function DashboardPage() {
 
         {/* Create Room Form */}
         {showCreateRoom && (
-          <div className="p-4 border-b border-gray-200 bg-gray-50">
+          <div className="p-4 border-b border-white/10 bg-white/5 backdrop-blur-sm">
             <form onSubmit={handleCreateRoom} className="space-y-3">
               <div>
-                <Label htmlFor="roomName" className="text-sm">
+                <Label
+                  htmlFor="roomName"
+                  className="text-sm text-white font-medium"
+                >
                   Room Name
                 </Label>
                 <Input
@@ -171,11 +225,14 @@ export default function DashboardPage() {
                   }
                   placeholder="Enter room name"
                   required
-                  className="mt-1"
+                  className="mt-1 bg-white/5 border-white/10 text-white placeholder-gray-400 focus:border-purple-400 rounded-xl"
                 />
               </div>
               <div>
-                <Label htmlFor="roomDescription" className="text-sm">
+                <Label
+                  htmlFor="roomDescription"
+                  className="text-sm text-white font-medium"
+                >
                   Description (optional)
                 </Label>
                 <Textarea
@@ -188,7 +245,7 @@ export default function DashboardPage() {
                     })
                   }
                   placeholder="Enter room description"
-                  className="mt-1"
+                  className="mt-1 bg-white/5 border-white/10 text-white placeholder-gray-400 focus:border-purple-400 rounded-xl"
                   rows={2}
                 />
               </div>
@@ -203,23 +260,28 @@ export default function DashboardPage() {
                       is_private: e.target.checked,
                     })
                   }
-                  className="rounded border-gray-300"
+                  className="rounded border-white/20 bg-white/5 text-purple-600 focus:ring-purple-500"
                 />
-                <Label htmlFor="isPrivate" className="text-sm">
+                <Label htmlFor="isPrivate" className="text-sm text-white">
                   Private room
                 </Label>
               </div>
-              <div className="flex space-x-2">
-                <Button type="submit" size="sm" className="flex-1">
-                  Create
-                </Button>
+              <div className="flex space-x-2 pt-2">
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
                   onClick={() => setShowCreateRoom(false)}
+                  className="flex-1 border-white/20 text-white hover:bg-white/10 rounded-xl"
+                  size="sm"
                 >
                   Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
+                  size="sm"
+                >
+                  Create
                 </Button>
               </div>
             </form>
@@ -229,14 +291,14 @@ export default function DashboardPage() {
         {/* Rooms List */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4">
-            <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">
+            <h3 className="text-sm font-medium text-gray-300 mb-3 uppercase tracking-wide">
               Rooms ({filteredRooms.length})
             </h3>
             <div className="space-y-2">
               {filteredRooms.length === 0 ? (
                 <div className="text-center py-8">
-                  <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm">
+                  <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-300 text-sm">
                     {rooms.length === 0
                       ? "No rooms yet"
                       : "No rooms match your search"}

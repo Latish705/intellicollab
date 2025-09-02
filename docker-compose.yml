@@ -30,7 +30,7 @@ services:
     image: grafana/grafana-oss
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "3001:3001"
 
   kafka:
     image: apache/kafka:latest
