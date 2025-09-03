@@ -37,11 +37,18 @@ api.interceptors.response.use(
 
 // API endpoints
 export const authAPI = {
-  register: (userData: { name: string; email: string; password: string }) =>
-    api.post("/api/v1/user/register", userData),
+  register: (userData: {
+    name: string;
+    email: string;
+    password: string;
+    phone: number;
+  }) => api.post("/api/v1/user/register", userData),
   login: (credentials: { email: string; password: string }) =>
     api.post("/api/v1/auth/login", credentials),
-  validate: (token: string) => api.post("/api/v1/auth/validate", { token }),
+  validate: (token: string) =>
+    api.get("/api/v1/user/validate", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
   createFromFirebase: (userData: {
     name: string;
     email: string;

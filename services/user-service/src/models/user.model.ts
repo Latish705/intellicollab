@@ -1,19 +1,19 @@
 import mongoose, { Schema, model } from "mongoose";
-interface IUser {
-  name: string;
+export interface IUser {
   isPremium: boolean;
   phone: string;
   email: string;
+  firebaseId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
   {
-    name: { type: String, required: true },
     isPremium: { type: Boolean, required: true, default: false },
     phone: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    firebaseId: { type: String, required: true, unique: true, index: true },
   },
   { timestamps: true }
 );

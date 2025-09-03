@@ -1,9 +1,18 @@
+// services/user-service/src/services/user.service.ts
+
 import bcrypt from "bcrypt";
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import { RegisterUserDto } from "../DTO/user-request.dto";
 import { UserResponseDto } from "../DTO/user-response.dto";
 import { Request, Response, NextFunction } from "express";
 import logger from "../config/logger";
+
+// Define a type for the Firebase user data payload for clarity
+interface FirebaseUserData {
+  firebaseId: string;
+  email: string;
+  name: string;
+}
 
 export class UserService {
   private isFirstSignin = async (
@@ -42,8 +51,31 @@ export class UserService {
     return this.toUserResponseDto(savedUser);
   }
 
-  public async findUserByFirebaseId(firebaseId: string) {
-    return await User.findOne({ firebaseId });
+  public async findUserByFirebaseId(firebaseId: string): Promise<IUser | null> {
+    return User.findOne({ firebaseId }).exec();
+  }
+
+  public async createUserFromFirebaseuserData(
+    userData: FirebaseUserData
+  ): Promise<IUser> {
+    const { firebaseId, email, name } = userData;
+
+    // Check if user already exists to prevent duplicates
+    const existingUser = await User.findOne({
+      $or: [{ firebaseId }, { email }],
+    });
+    if (existingUser) {
+      throw new Error("User with this Firebase UID or email already exists.");
+    }
+
+    const newUser = new User({
+      firebaseId,
+      email,
+      name,
+    });
+
+    await newUser.save();
+    return newUser;
   }
 
   private toUserResponseDto(user: any): UserResponseDto {
@@ -52,7 +84,7 @@ export class UserService {
       name: user.name,
       email: user.email,
       is_premium: user.is_premium,
-      created_at: user.created_at.toISOString(),
+      // created_at: user.created_at.toISOString(),
     };
   }
 }
