@@ -63,7 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const fallbackData = {
                   name: userData.name,
                   email: userData.email,
-                  password: "firebase_user_" + firebaseUser.uid, // Temp password for Firebase users
                 };
                 await authAPI.register(fallbackData);
 

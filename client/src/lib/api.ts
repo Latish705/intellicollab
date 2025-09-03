@@ -40,8 +40,8 @@ export const authAPI = {
   register: (userData: {
     name: string;
     email: string;
-    password: string;
-    phone: number;
+    // password: string;
+    // phone: number;
   }) => api.post("/api/v1/user/register", userData),
   login: (credentials: { email: string; password: string }) =>
     api.post("/api/v1/auth/login", credentials),
