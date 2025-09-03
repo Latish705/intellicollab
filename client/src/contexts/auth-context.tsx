@@ -153,11 +153,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         displayName: userData.name,
       });
 
-      // The onAuthStateChanged listener will handle backend user creation
-      // Force a redirect to dashboard after successful registration
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+      // // The onAuthStateChanged listener will handle backend user creation
+      // // Force a redirect to dashboard after successful registration
+      // setTimeout(() => {
+      //   router.push("/dashboard");
+      // }, 1000);
 
       return userCredential;
     } catch (error: any) {

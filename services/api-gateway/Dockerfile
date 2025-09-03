@@ -1,13 +1,12 @@
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
-WORKDIR /workspace
+WORKDIR /app
 
-COPY packages ./packages
+COPY package*.json ./
+RUN npm install
 
-RUN npm install tsc -g
+COPY . .
 
-WORKDIR /workspace/packages/constants
-RUN npm install && npm run build
+EXPOSE 4000
 
-WORKDIR /workspace/packages/logger
-RUN npm install && npm run build
+CMD ["npm", "run", "start"]

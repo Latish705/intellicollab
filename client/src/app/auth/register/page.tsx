@@ -86,13 +86,17 @@ export default function RegisterPage() {
     }
 
     try {
-      await register({
+      const userCred = await register({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
       });
-      router.push("/dashboard");
+      if (userCred) {
+        router.push("/dashboard");
+      } else {
+        <dialog>Cannot create user at this time</dialog>;
+      }
     } catch (error: unknown) {
       setError(
         (error as any)?.response?.data?.message || "Registration failed"
