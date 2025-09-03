@@ -16,6 +16,9 @@ coverage/
 
 # OS files
 .DS_Store
+# .gitignore
+services/user-service/service-key.json
+
 Thumbs.db
 
 # Logs
