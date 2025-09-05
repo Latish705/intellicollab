@@ -1,17 +1,42 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { GoogleIcon } from "@/components/icons";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signInWithEmail, signInWithGoogle } from "@/config/firebase";
 
 const LoginPage: React.FC = () => {
   const navigate = useRouter();
+  const [user, setUser] = useState({ email: "", password: "" });
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    navigate.push("/dashboard");
+  const handleLoginEmailAndPassword = async (e: React.FormEvent) => {
+    try {
+      e.preventDefault();
+
+      const { email, password } = user;
+      console.log("Logging in with", email, password);
+      const token = await signInWithEmail(email, password);
+      console.log(token);
+      navigate.push("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert((error as Error).message);
+    }
+
+    // navigate.push("/dashboard");
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const token = await signInWithGoogle();
+      console.log(token);
+      navigate.push("/dashboard");
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      alert((error as Error).message);
+    }
   };
 
   return (
@@ -22,6 +47,7 @@ const LoginPage: React.FC = () => {
       <div className="space-y-4">
         <button
           type="button"
+          onClick={() => handleGoogleSignIn()}
           className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-white/20 rounded-md shadow-sm text-sm font-medium text-white bg-white/5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple"
         >
           <GoogleIcon className="w-5 h-5" />
@@ -35,7 +61,7 @@ const LoginPage: React.FC = () => {
         <div className="flex-grow border-t border-white/10"></div>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-6">
+      <form onSubmit={handleLoginEmailAndPassword} className="space-y-6">
         <div>
           <label
             htmlFor="email"
@@ -47,9 +73,10 @@ const LoginPage: React.FC = () => {
             id="email"
             name="email"
             type="email"
+            placeholder="you@example.com"
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
             autoComplete="email"
             required
-            defaultValue="lotishadwani70@gmail.com"
             className="mt-1 block w-full bg-white/5 border border-white/10 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-dark-bg focus:ring-brand-purple-light"
           />
         </div>
@@ -65,8 +92,9 @@ const LoginPage: React.FC = () => {
             name="password"
             type="password"
             autoComplete="current-password"
+            placeholder="********"
             required
-            defaultValue="password"
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
             className="mt-1 block w-full bg-white/5 border border-white/10 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-dark-bg focus:ring-brand-purple-light"
           />
         </div>

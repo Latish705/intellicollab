@@ -67,6 +67,8 @@ export const signUpWithEmail = async (email: string, password: string) => {
     sendEmailVerification(userCredential.user).then(() => {
       console.log("Verification email sent to", email);
     });
+    console.log("userCredential:", userCredential);
+
     return userCredential.user;
   } catch (error: any) {
     console.error("Error signing up:", error.message);
@@ -153,8 +155,8 @@ export const isUserVerified = (): boolean => {
  * @param callback - A function to be called when the auth state changes. It receives the User object or null.
  * @returns {import("firebase/auth").Unsubscribe} A function to unsubscribe the listener.
  */
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  return onAuthStateChanged(auth, callback);
-};
+// export const onAuthStateChange = (callback: (user: User | null) => void) => {
+//   return onAuthStateChanged(auth, callback);
+// };
 
 export default app;
