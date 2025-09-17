@@ -1,43 +1,89 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import axios from "axios";
 
 import { GoogleIcon } from "@/components/icons";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { signInWithEmail, signInWithGoogle } from "@/config/firebase";
+import {
+  signInWithEmail,
+  signInWithGoogle,
+  getCurrentUserToken,
+} from "@/config/firebase";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage: React.FC = () => {
   const navigate = useRouter();
-  const [user, setUser] = useState({ email: "", password: "" });
+  const { user, loading } = useAuth();
+  const [userData, setUser] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user && !loading) {
+      navigate.push("/dashboard");
+    }
+  }, [user, loading, navigate]);
 
   const handleLoginEmailAndPassword = async (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
+    e.preventDefault();
+    setIsLoading(true);
 
-      const { email, password } = user;
-      console.log("Logging in with", email, password);
-      const token = await signInWithEmail(email, password);
-      console.log(token);
+    if (!userData.email || !userData.password) {
+      alert("Please enter both email and password");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      console.log("Logging in with:", userData);
+      const token = await signInWithEmail(userData.email, userData.password);
+      console.log("Received token:", token);
       navigate.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
       alert((error as Error).message);
+    } finally {
+      setIsLoading(false);
     }
-
-    // navigate.push("/dashboard");
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      const token = await signInWithGoogle();
-      console.log(token);
-      navigate.push("/dashboard");
+      console.log("Google Sign-In clicked");
+      const user = await signInWithGoogle();
+      console.log("Google sign-in successful:", user);
+
+      if (user) {
+        const token = await getCurrentUserToken();
+        const res = await axios.post(
+          "http://localhost:4000/api/v1/user/login",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Backend login response:", res.data);
+
+        if (res.data.success) {
+          navigate.push("/dashboard");
+        } else {
+          alert("User not found, please register first.");
+          navigate.push("/register");
+        }
+      }
     } catch (error) {
       console.error("Google sign-in failed:", error);
       alert((error as Error).message);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Add proper loading component
+  }
 
   return (
     <AuthLayout
@@ -74,7 +120,7 @@ const LoginPage: React.FC = () => {
             name="email"
             type="email"
             placeholder="you@example.com"
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            onChange={(e) => setUser({ ...userData, email: e.target.value })}
             autoComplete="email"
             required
             className="mt-1 block w-full bg-white/5 border border-white/10 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-dark-bg focus:ring-brand-purple-light"
@@ -94,15 +140,16 @@ const LoginPage: React.FC = () => {
             autoComplete="current-password"
             placeholder="********"
             required
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            onChange={(e) => setUser({ ...userData, password: e.target.value })}
             className="mt-1 block w-full bg-white/5 border border-white/10 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-dark-bg focus:ring-brand-purple-light"
           />
         </div>
         <button
           type="submit"
-          className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple"
+          disabled={isLoading}
+          className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple disabled:opacity-50"
         >
-          Sign In
+          {isLoading ? "Signing In..." : "Sign In"}
         </button>
       </form>
 

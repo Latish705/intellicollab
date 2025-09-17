@@ -11,7 +11,7 @@ export interface IUser {
 const userSchema = new Schema<IUser>(
   {
     isPremium: { type: Boolean, required: true, default: false },
-    phone: { type: String, required: true },
+    phone: { type: String },
     email: { type: String, required: true, unique: true },
     firebaseId: { type: String, required: true, unique: true, index: true },
   },

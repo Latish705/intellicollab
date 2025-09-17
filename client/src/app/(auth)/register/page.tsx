@@ -5,49 +5,96 @@ import { GoogleIcon } from "@/components/icons";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signInWithGoogle, signUpWithEmail } from "@/config/firebase";
+import {
+  signInWithGoogle,
+  signUpWithEmail,
+  getCurrentUserToken,
+} from "@/config/firebase";
+import axios from "axios";
 
 const RegisterPage: React.FC = () => {
   const [user, setUser] = React.useState({
     fullName: "",
-
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useRouter();
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   const handleGoogleSignUp = async () => {
+    setIsLoading(true);
     try {
-      const token = await signInWithGoogle();
-      console.log(token);
-      navigate.push("/dashboard");
-    } catch (error) {
-      console.error("Google sign-in failed:", error);
-      alert((error as Error).message);
+      const res = await signInWithGoogle();
+      console.log("Google sign-in successful:", res);
+      const token = await getCurrentUserToken();
+      const backendRes = await axios.post(
+        "http://localhost:4000/api/v1/user/register",
+        {
+          name: res.displayName,
+          email: res.email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (backendRes.data && backendRes.data.success) {
+        alert("Registration successful via Google!");
+        console.log("Backend user creation successful:", backendRes.data);
+        navigate.push("/dashboard");
+      } else {
+        alert("Registration failed on the server side. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("Google sign-in failed:", error.message);
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       if (user.password !== user.confirmPassword) {
         alert("Passwords do not match");
+        setIsLoading(false);
         return;
       }
-      const newUser = await signUpWithEmail(user.email, user.password);
-      console.log("Registered user:", newUser);
-      alert(
-        "Registration successful! Please check your email to verify your account."
+      const res = await signUpWithEmail(user.email, user.password);
+      console.log("Firebase user created:", res);
+      const token = await getCurrentUserToken();
+      const backendRes = await axios.post(
+        "http://localhost:4000/api/v1/user/register",
+        {
+          email: user.email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      navigate.push("/dashboard");
+      console.log("Backend user creation successful:", backendRes.data);
+
+      if (backendRes.data && backendRes.data.success) {
+        alert(
+          "Registration successful! Please verify your email before logging in."
+        );
+        navigate.push("/dashboard");
+      } else {
+        alert("Registration failed on the server side. Please try again.");
+      }
     } catch (error: any) {
-      console.error("Registration failed:", error);
+      console.error("Registration failed:", error.message);
       alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,10 +107,11 @@ const RegisterPage: React.FC = () => {
         <button
           type="button"
           onClick={() => handleGoogleSignUp()}
-          className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-white/20 rounded-md shadow-sm text-sm font-medium text-white bg-white/5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple"
+          disabled={isLoading}
+          className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-white/20 rounded-md shadow-sm text-sm font-medium text-white bg-white/5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple disabled:opacity-50"
         >
           <GoogleIcon className="w-5 h-5" />
-          Sign up with Google
+          {isLoading ? "Signing up..." : "Sign up with Google"}
         </button>
       </div>
 
@@ -151,9 +199,10 @@ const RegisterPage: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple"
+          disabled={isLoading}
+          className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg focus:ring-brand-purple disabled:opacity-50"
         >
-          Create Account
+          {isLoading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
 

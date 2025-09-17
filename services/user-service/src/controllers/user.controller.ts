@@ -26,6 +26,7 @@ export class UserController {
       registerUserDto.firebaseId = userFirebaseId as string;
 
       const newUser = await this.userService.createUser(registerUserDto);
+      console.log("New user is created:", newUser);
 
       res.status(201).json({ success: true, user: newUser });
     } catch (error) {
@@ -38,10 +39,16 @@ export class UserController {
   public login = async (req: Request, res: Response): Promise<any> => {
     try {
       const loginUserDto: LoginUserDto = req.body;
+      console.log(loginUserDto);
+
+      loginUserDto.firebaseId = req.headers["x-user-id"] as string;
+      console.log(loginUserDto);
 
       const user = await this.userService.findUserByFirebaseId(
         loginUserDto.firebaseId
       );
+
+      console.log(user);
 
       if (user) {
         res.status(200).json({ success: true, user });

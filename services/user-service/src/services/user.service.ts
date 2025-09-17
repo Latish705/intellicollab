@@ -52,6 +52,10 @@ export class UserService {
   }
 
   public async findUserByFirebaseId(firebaseId: string): Promise<IUser | null> {
+    console.log("Finding user by Firebase ID:", firebaseId);
+    const temp = await User.findOne({ firebaseId });
+    console.log("User found:", temp);
+
     return User.findOne({ firebaseId }).exec();
   }
 
