@@ -2,8 +2,16 @@ import Room, { IRoom } from "../models/room.model";
 import { CreateRoomDto } from "../DTO/room-request.dto";
 
 import Message from "../models/message.model";
+import { consumer, producer } from "../config/kafka";
 
-import { kafka } from "../config/kafka";
+const kafkaProducer = producer;
+
+// DTO for a new message
+export interface PostMessageDto {
+  chatId: string;
+  senderId: string;
+  message: string;
+}
 
 export class ChatService {
   constructor() {
@@ -11,21 +19,23 @@ export class ChatService {
     kafkaProducer.connect().catch(console.error);
   }
 
-  public async postMessage(messageData: PostMessageDto): Promise<void> {
+  public async postMessage(messageData: PostMessageDto): Promise<any> {
     // 1. Save the message to MongoDB
-    const newMessage = new Message({
-      room_id: messageData.room_id,
-      user_id: messageData.user_id,
-      message_text: messageData.message_text,
-    });
-    await newMessage.save();
+    // const newMessage = new Message({
+    //   room_id: messageData.room_id,
+    //   user_id: messageData.user_id,
+    //   message_text: messageData.message_text,
+    // });
+    // const savedMessage = await newMessage.save();
 
     // 2. Publish the saved message to the 'new-messages' Kafka topic
     await kafkaProducer.send({
-      topic: "new-messages",
-      messages: [{ value: JSON.stringify(newMessage) }],
+      topic: "mongo-chat-messages",
+      messages: [{ value: JSON.stringify(messageData) }],
     });
-    console.log(`Published message ${newMessage._id} to Kafka.`);
+    console.log(`Published message to Kafka:`, messageData);
+
+    return messageData;
   }
 
   /**
@@ -53,13 +63,4 @@ export class ChatService {
   }
 
   // We will add more methods here later, like `postMessage`, `getMessages`, etc.
-}
-
-const kafkaProducer = kafka.producer();
-
-// DTO for a new message
-interface PostMessageDto {
-  room_id: string;
-  user_id: string;
-  message_text: string;
 }

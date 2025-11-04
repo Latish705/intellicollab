@@ -11,7 +11,7 @@ import ExploreView from "@/components/dashboard/ExploreView";
 import AiReplyModal from "@/components/dashboard/AiReplyModal";
 
 const DashboardPage: React.FC = () => {
-  const { user, signOut } = useAuth(); // Get current user and signOut function
+  const { user } = useAuth(); // Get current user from auth context
   const {
     activeRoom,
     messages,
@@ -33,19 +33,6 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* User info header */}
-      <div className="absolute top-4 right-4 z-50 flex items-center gap-3 bg-black/20 backdrop-blur-sm rounded-lg px-4 py-2">
-        <span className="text-white text-sm">
-          Welcome, {user?.displayName || user?.email}
-        </span>
-        <button
-          onClick={signOut}
-          className="text-white/70 hover:text-white text-sm hover:bg-white/10 px-2 py-1 rounded transition-colors"
-        >
-          Sign Out
-        </button>
-      </div>
-      
       <Sidebar
         rooms={mockRooms}
         activeRoom={activeRoom}

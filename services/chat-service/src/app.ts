@@ -4,6 +4,7 @@ import helmet, { crossOriginEmbedderPolicy } from "helmet";
 import cors from "cors";
 import promclient, { register } from "prom-client";
 import chatRoutes from "./routes/chat.routes";
+import { ChatService } from "./services/chat.service";
 
 const app = express();
 

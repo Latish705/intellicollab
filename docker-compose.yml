@@ -1,72 +1,72 @@
 name: intellicollab
 
 services:
-  api-gateway:
-    build: ./services/api-gateway
-    container_name: api-gateway
-    ports:
-      - "4000:4000"
-    environment:
-      NODE_ENV: development
-      PORT: 4000
-    volumes:
-      - ./services/api-gateway:/app
-      - /app/node_modules
-    command: npm start
-    restart: unless-stopped
+  # api-gateway:
+  #   build: ./services/api-gateway
+  #   container_name: api-gateway
+  #   ports:
+  #     - "4000:4000"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 4000
+  #   volumes:
+  #     - ./services/api-gateway:/app
+  #     - /app/node_modules
+  #   command: npm start
+  #   restart: unless-stopped
 
-  user-service:
-    build: ./services/user-service
-    container_name: user-service
-    ports:
-      - "4001:4001"
-    environment:
-      NODE_ENV: development
-      PORT: 4001
-    volumes:
-      - ./services/user-service:/app
-      - /app/node_modules
-    command: npm start
-    restart: unless-stopped
+  # user-service:
+  #   build: ./services/user-service
+  #   container_name: user-service
+  #   ports:
+  #     - "4001:4001"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 4001
+  #   volumes:
+  #     - ./services/user-service:/app
+  #     - /app/node_modules
+  #   command: npm start
+  #   restart: unless-stopped
 
-  chat-service:
-    build: ./services/chat-service
-    container_name: chat-service
-    ports:
-      - "4002:4002"
-    environment:
-      NODE_ENV: development
-      PORT: 4002
-    volumes:
-      - ./services/chat-service:/app
-      - /app/node_modules
-    command: npm start
-    restart: unless-stopped
+  # chat-service:
+  #   build: ./services/chat-service
+  #   container_name: chat-service
+  #   ports:
+  #     - "4002:4002"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 4002
+  #   volumes:
+  #     - ./services/chat-service:/app
+  #     - /app/node_modules
+  #   command: npm start
+  #   restart: unless-stopped
 
-  ai-service:
-    build: ./services/ai-service
-    container_name: ai-service
-    ports:
-      - "4003:4003"
-    environment:
-      PORT: 4003
-    volumes:
-      - ./services/ai-service:/app
-    command: uvicorn main:app --host 0.0.0.0 --port 4003 --reload
-    restart: unless-stopped
+  # ai-service:
+  #   build: ./services/ai-service
+  #   container_name: ai-service
+  #   ports:
+  #     - "4003:4003"
+  #   environment:
+  #     PORT: 4003
+  #   volumes:
+  #     - ./services/ai-service:/app
+  #   command: uvicorn main:app --host 0.0.0.0 --port 4003 --reload
+  #   restart: unless-stopped
 
-  persistence-service:
-    build: ./services/persistence_service
-    container_name: persistence-service
-    ports:
-      - "4004:4004"
-    environment:
-      NODE_ENV: development
-      PORT: 4004
-    volumes:
-      - ./services/persistence-service:/app
-    command: npm start
-    restart: unless-stopped
+  # persistence-service:
+  #   build: ./services/persistence_service
+  #   container_name: persistence-service
+  #   ports:
+  #     - "4004:4004"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 4004
+  #   volumes:
+  #     - ./services/persistence-service:/app
+  #   command: npm start
+  #   restart: unless-stopped
 
   redis:
     image: redis/redis-stack:6.2.6-v19
@@ -100,28 +100,42 @@ services:
       - "3001:3001"
 
   kafka:
-    image: apache/kafka:latest
-    container_name: broker
-    ports:
-      - "9092:9092" # client connections
-      - "9093:9093" # controller listener
+    image: bitnami/kafka:latest
+    container_name: kafka
     environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.29.60:9092
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_NUM_PARTITIONS: 3
-      KAFKA_CLUSTER_ID: 1Eodtvr-QgqokHGcdfv-5g
-    volumes:
-      - kafka-data:/var/lib/kafka/data
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://0.0.0.0:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9094:9094"
+    networks:
+      - kafka-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8090:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local-cluster
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_READONLY=false
+      - KAFKA_CLUSTERS_0_TOPIC_AUTO_CREATE=true
+    networks:
+      - kafka-network
 
 volumes:
   redis_data:
   kafka-data:
+
+networks:
+  kafka-network:
+    driver: bridge

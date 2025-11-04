@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IntelliCollab - Socket.io Test Client</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      h1 {
+        color: #333;
+        border-bottom: 3px solid #4caf50;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #555;
+        margin-top: 0;
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #666;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: monospace;
+      }
+      textarea {
+        min-height: 60px;
+        resize: vertical;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .danger {
+        background-color: #f44336;
+      }
+      .danger:hover {
+        background-color: #da190b;
+      }
+      #output {
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+        padding: 15px;
+        border-radius: 4px;
+        min-height: 300px;
+        max-height: 500px;
+        overflow-y: auto;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .log-entry {
+        margin-bottom: 8px;
+        padding: 5px;
+        border-left: 3px solid #4caf50;
+        padding-left: 10px;
+      }
+      .log-error {
+        border-left-color: #f44336;
+        color: #ff6b6b;
+      }
+      .log-success {
+        border-left-color: #4caf50;
+        color: #51cf66;
+      }
+      .log-info {
+        border-left-color: #2196f3;
+        color: #74c0fc;
+      }
+      .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+      .status.connected {
+        background-color: #4caf50;
+        color: white;
+      }
+      .status.disconnected {
+        background-color: #f44336;
+        color: white;
+      }
+      .warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+      .warning strong {
+        color: #856404;
+      }
+      .info-box {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+      .info-box code {
+        background-color: #fff;
+        padding: 2px 6px;
+        border-radius: 3px;
+        color: #c7254e;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 IntelliCollab Chat Service - WebSocket Test Client</h1>
+
+    <div class="warning">
+      <strong>⚠️ Important:</strong> Make sure your <code>chatId</code> and
+      <code>senderId</code> are valid MongoDB ObjectIds (24-character hex strings
+      like <code>674f1f77bcf86cd799439011</code>). Regular IDs like "111" will
+      cause validation errors!
+    </div>
+
+    <div class="info-box">
+      <strong>📝 Quick Setup:</strong>
+      <ol>
+        <li>
+          Make sure chat-service is running on
+          <code>http://localhost:4002</code>
+        </li>
+        <li>
+          Create a room using Postman and copy the <code>chatId</code> from the
+          response
+        </li>
+        <li>
+          Use a valid <code>senderId</code> from your MongoDB users collection
+        </li>
+        <li>Paste them into the fields below and click "Connect"</li>
+      </ol>
+    </div>
+
+    <div class="container">
+      <h2>⚙️ Connection Settings</h2>
+      <div class="input-group">
+        <label for="serverUrl">Server URL:</label>
+        <input
+          type="text"
+          id="serverUrl"
+          value="http://localhost:4002"
+          placeholder="http://localhost:4002"
+        />
+      </div>
+      <button onclick="connectSocket()" id="connectBtn">Connect</button>
+      <button
+        onclick="disconnectSocket()"
+        id="disconnectBtn"
+        class="danger"
+        disabled
+      >
+        Disconnect
+      </button>
+      <span id="connectionStatus" class="status disconnected"
+        >Disconnected</span
+      >
+    </div>
+
+    <div class="container">
+      <h2>🚪 Join Room</h2>
+      <div class="input-group">
+        <label for="chatId">Chat ID (MongoDB ObjectId):</label>
+        <input
+          type="text"
+          id="chatId"
+          placeholder="674f2a88bcf86cd799439012"
+          value=""
+        />
+        <small style="color: #666"
+          >Must be a valid 24-character hex string</small
+        >
+      </div>
+      <button onclick="joinRoom()" id="joinRoomBtn" disabled>Join Room</button>
+    </div>
+
+    <div class="container">
+      <h2>💬 Send Message</h2>
+      <div class="input-group">
+        <label for="senderId">Sender ID (MongoDB ObjectId):</label>
+        <input
+          type="text"
+          id="senderId"
+          placeholder="674f1f77bcf86cd799439011"
+          value=""
+        />
+        <small style="color: #666"
+          >Must be a valid 24-character hex string</small
+        >
+      </div>
+      <div class="input-group">
+        <label for="message">Message:</label>
+        <textarea id="message" placeholder="Type your message here...">
+Hello from WebSocket test client! 👋</textarea
+        >
+      </div>
+      <button onclick="sendMessage()" id="sendMessageBtn" disabled>
+        Send Message
+      </button>
+    </div>
+
+    <div class="container">
+      <h2>📊 Output Console</h2>
+      <button onclick="clearOutput()" style="background-color: #ff9800">
+        Clear Console
+      </button>
+      <div id="output"></div>
+    </div>
+
+    <script>
+      let socket = null;
+      const output = document.getElementById("output");
+      const connectionStatus = document.getElementById("connectionStatus");
+      const connectBtn = document.getElementById("connectBtn");
+      const disconnectBtn = document.getElementById("disconnectBtn");
+      const joinRoomBtn = document.getElementById("joinRoomBtn");
+      const sendMessageBtn = document.getElementById("sendMessageBtn");
+
+      function log(message, type = "info") {
+        const timestamp = new Date().toLocaleTimeString();
+        const entry = document.createElement("div");
+        entry.className = `log-entry log-${type}`;
+        entry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+        output.appendChild(entry);
+        output.scrollTop = output.scrollHeight;
+      }
+
+      function updateConnectionStatus(connected) {
+        if (connected) {
+          connectionStatus.textContent = "Connected";
+          connectionStatus.className = "status connected";
+          connectBtn.disabled = true;
+          disconnectBtn.disabled = false;
+          joinRoomBtn.disabled = false;
+          sendMessageBtn.disabled = false;
+        } else {
+          connectionStatus.textContent = "Disconnected";
+          connectionStatus.className = "status disconnected";
+          connectBtn.disabled = false;
+          disconnectBtn.disabled = true;
+          joinRoomBtn.disabled = true;
+          sendMessageBtn.disabled = true;
+        }
+      }
+
+      function connectSocket() {
+        const serverUrl = document.getElementById("serverUrl").value;
+
+        try {
+          log(`🔌 Connecting to ${serverUrl}...`, "info");
+          socket = io(serverUrl);
+
+          socket.on("connect", () => {
+            log(
+              `✅ Connected successfully! Socket ID: ${socket.id}`,
+              "success"
+            );
+            updateConnectionStatus(true);
+          });
+
+          socket.on("disconnect", () => {
+            log("❌ Disconnected from server", "error");
+            updateConnectionStatus(false);
+          });
+
+          socket.on("messageConfirmed", (data) => {
+            log(
+              `✅ Message confirmed: ${JSON.stringify(data, null, 2)}`,
+              "success"
+            );
+          });
+
+          socket.on("messageError", (data) => {
+            log(`❌ Message error: ${JSON.stringify(data, null, 2)}`, "error");
+          });
+
+          // Listen for messages broadcasted to the room (from Kafka consumer)
+          socket.on("message", (data) => {
+            log(
+              `📩 📢 NEW MESSAGE RECEIVED (broadcasted to room): ${JSON.stringify(
+                data,
+                null,
+                2
+              )}`,
+              "success"
+            );
+          });
+
+          socket.on("connect_error", (error) => {
+            log(`❌ Connection error: ${error.message}`, "error");
+            updateConnectionStatus(false);
+          });
+        } catch (error) {
+          log(`❌ Error: ${error.message}`, "error");
+        }
+      }
+
+      function disconnectSocket() {
+        if (socket) {
+          socket.disconnect();
+          socket = null;
+          log("🔌 Disconnected manually", "info");
+          updateConnectionStatus(false);
+        }
+      }
+
+      function validateObjectId(id, fieldName) {
+        const objectIdRegex = /^[a-fA-F0-9]{24}$/;
+        if (!id) {
+          log(`❌ ${fieldName} is required!`, "error");
+          return false;
+        }
+        if (!objectIdRegex.test(id)) {
+          log(
+            `❌ ${fieldName} must be a valid 24-character hexadecimal string. Got: "${id}"`,
+            "error"
+          );
+          return false;
+        }
+        return true;
+      }
+
+      function joinRoom() {
+        const chatId = document.getElementById("chatId").value.trim();
+
+        if (!validateObjectId(chatId, "Chat ID")) {
+          return;
+        }
+
+        if (socket && socket.connected) {
+          socket.emit("joinRoom", chatId);
+          log(`🚪 Joining room: ${chatId}`, "info");
+        } else {
+          log("❌ Not connected! Please connect first.", "error");
+        }
+      }
+
+      function sendMessage() {
+        const chatId = document.getElementById("chatId").value.trim();
+        const senderId = document.getElementById("senderId").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        // Validate ObjectIds
+        if (
+          !validateObjectId(chatId, "Chat ID") ||
+          !validateObjectId(senderId, "Sender ID")
+        ) {
+          return;
+        }
+
+        if (!message) {
+          log("❌ Message is required!", "error");
+          return;
+        }
+
+        if (socket && socket.connected) {
+          const messageData = {
+            chatId: chatId,
+            senderId: senderId,
+            message: message,
+          };
+
+          log(
+            `📤 Sending message: ${JSON.stringify(messageData, null, 2)}`,
+            "info"
+          );
+          socket.emit("newMessage", messageData);
+        } else {
+          log("❌ Not connected! Please connect first.", "error");
+        }
+      }
+
+      function clearOutput() {
+        output.innerHTML = "";
+        log("🗑️ Console cleared", "info");
+      }
+
+      // Initial log
+      log(
+        '👋 WebSocket Test Client initialized. Click "Connect" to start.',
+        "info"
+      );
+    </script>
+  </body>
+</html>
